@@ -17,7 +17,6 @@ export const useChatStore = create((set, get) => ({
       set({ users: res.data });
     } catch (error) {
       if (error.response?.status === 401) {
-        // Token hết hạn hoặc không hợp lệ
         useAuthStore.getState().logout();
         toast.error("Phiên đăng nhập đã hết hạn");
       } else {
@@ -25,6 +24,18 @@ export const useChatStore = create((set, get) => ({
       }
     } finally {
       set({ isUsersLoading: false });
+    }
+  },
+
+  deleteMessage: async (id) => {
+    try {
+      await axiosInstance.delete(`/messages/${id}`);
+      set((state) => ({
+        messages: state.messages.filter((msg) => msg._id !== id),
+      }));
+      toast.success("Message deleted");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to delete message");
     }
   },
 
@@ -38,18 +49,20 @@ export const useChatStore = create((set, get) => ({
         useAuthStore.getState().logout();
         toast.error("Phiên đăng nhập đã hết hạn");
       } else {
-        toast.error(error.response?.data?.message || "Failed to fetch messages");
+        toast.error(
+          error.response?.data?.message || "Failed to fetch messages"
+        );
       }
     } finally {
       set({ isMessagesLoading: false });
     }
   },
-  
+
   sendMessage: async (messageData) => {
     const { selectedUser, messages } = get();
     try {
       const res = await axiosInstance.post(
-        `/messages/send/${selectedUser._id}`, 
+        `/messages/send/${selectedUser._id}`,
         messageData
       );
       set({ messages: [...messages, res.data] });
@@ -71,7 +84,8 @@ export const useChatStore = create((set, get) => ({
     const socket = useAuthStore.getState().socket;
 
     socket.on("newMessage", (newMessage) => {
-      const isMessageSentFromSelectedUser = newMessage.senderId === selectedUser._id;
+      const isMessageSentFromSelectedUser =
+        newMessage.senderId === selectedUser._id;
       if (!isMessageSentFromSelectedUser) return;
 
       set({
