@@ -29,12 +29,12 @@ const SettingsPage = () => {
             <button
               key={t}
               className={`
-      group flex flex-col items-center gap-1.5 p-2 rounded-lg transition-colors
-      ${theme === t ? "bg-base-200" : "hover:bg-base-200/50"}
+               group flex flex-col items-center gap-1.5 p-2 rounded-lg transition-colors
+               ${theme === t ? "bg-base-200" : "hover:bg-base-200/50"}
     `}
               onClick={() => {
                 setTheme(t);
-                document.documentElement.setAttribute("data-theme", t); // thêm dòng này
+                document.documentElement.setAttribute("data-theme", t);
               }}
             >
               <div
@@ -55,12 +55,10 @@ const SettingsPage = () => {
           ))}
         </div>
 
-        {/* Preview Section */}
         <h3 className="text-lg font-semibold mb-3">Preview</h3>
         <div className="rounded-xl border border-base-300 overflow-hidden bg-base-100 shadow-lg">
           <div className="p-4 bg-base-200">
             <div className="max-w-lg mx-auto">
-              {/* Mock Chat UI */}
               <div className="bg-base-100 rounded-xl shadow-sm overflow-hidden">
                 {/* Chat Header */}
                 <div className="px-4 py-3 border-b border-base-300 bg-base-100">
